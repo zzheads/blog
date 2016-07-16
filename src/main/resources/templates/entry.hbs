@@ -1,0 +1,27 @@
+{{#partial "content"}}
+    <body>
+    <div class="container">
+        <h1></h1>
+        <h1>{{entry.title}}</h1>
+        <h2>{{entry.text}}</h2>
+        <h3>{{entry.dateAsString}}</h3>
+        <ul>
+            {{#each comments}}
+                <li>
+                    <h2>{{author}}</h2>
+                    <h2>{{text}}</h2>
+                    <h2>{{date}}</h2>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+    <footer>
+        <div>
+            <a href="#">Contact Us</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+            <a href="#">Terms</a>
+        </div>
+    </footer>
+    </body>
+{{/partial}}
+
+{{>base.hbs}}
