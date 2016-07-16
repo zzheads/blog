@@ -1,7 +1,17 @@
 {{#partial "content"}}
     <body>
-            <div class="container">
+    <header>
+        <div class="container">
+            <div class="site-header">
+                <a class="logo" href="/entries">SparkBlog</a>
+                <a class="new-entry button button-round" href="public/edit.html"><i class="material-icons">create</i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
                 <div class="new-entry">
+                    <h2>Publish New Entry</h2>
                     <form action="/new" method="post">
                         <label for="title"> Title</label>
                         <input type="text" name="title"><br>
@@ -12,6 +22,12 @@
                     </form>
                 </div>
             </div>
+    <footer>
+        <div>
+            <a href="#">Contact Us</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+            <a href="#">Terms</a>
+        </div>
+    </footer>
 
     </body>
 {{/partial}}

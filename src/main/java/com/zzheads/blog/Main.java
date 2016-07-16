@@ -45,7 +45,6 @@ public class Main {
 
         Spark.staticFileLocation("/public");
 
-
         get("/entries", (rq, rs) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("title", "Blog");
@@ -64,11 +63,49 @@ public class Main {
             return null;
         });
 
+        get("/edit/:slug", (rq, rs) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("entry", blog.findEntryBySlug(rq.params("slug")));
+            model.put("slug", rq.params("slug"));
+            return new ModelAndView(model, "edit.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/edit/:slug", (rq, rs) -> {
+            BlogEntry entry = blog.findEntryBySlug(rq.params("slug"));
+            String title = rq.queryParams("title");
+            String text = rq.queryParams("text");
+            entry.setTitle(title);
+            entry.setText(text);
+            rs.redirect("/entries");
+            return null;
+        });
+
+        post("/entry/:slug/comment", (rq, rs) -> {
+            BlogEntry entry = blog.findEntryBySlug(rq.params("slug"));
+            String author = rq.queryParams("author");
+            String text = rq.queryParams("comment");
+            Comment comment = new Comment(new Date(), text, author);
+            entry.addComment(comment);
+                //            boolean added = idea.addVoter(req.attribute("username"));
+                //            if (added) {
+                //                setFlashMessage(req, "Thanks for your vote!");
+                //            }
+                //            else {
+                //                setFlashMessage(req, "You already voted!");
+                //            }
+            String target = "/entry/"+rq.params("slug");
+            rs.redirect(target);
+            return null;
+        });
+
         get("/entry/:slug", (rq, rs) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put("comments", blog.findEntryBySlug(rq.params("slug")).getComments());
             model.put("entry", blog.findEntryBySlug(rq.params("slug")));
+            model.put("comments", blog.findEntryBySlug(rq.params("slug")).getComments());
+            model.put("slug", rq.params("slug"));
             return new ModelAndView(model, "entry.hbs");
         }, new HandlebarsTemplateEngine());
+
+
     }
 }
