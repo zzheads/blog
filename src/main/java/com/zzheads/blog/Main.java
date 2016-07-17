@@ -76,6 +76,13 @@ public class Main {
         });
 
         before("/new", (req, res) -> {
+            String password = req.cookie("password");
+            if (password != PASSWORD_ADMIN) {
+                setFlashMessage(req, "Whoops, you cant post new entries since you are not admin");
+                res.redirect("/");
+                halt();
+            }
+
             if (req.attribute("username") == null) {
                 setFlashMessage(req, "Whoops, please sign in first!");
                 res.redirect("/");
@@ -84,6 +91,13 @@ public class Main {
         });
 
         before("/edit", (req, res) -> {
+            String password = req.cookie("password");
+            if (password != PASSWORD_ADMIN) {
+                setFlashMessage(req, "Whoops, you cant edit entries since you are not admin");
+                res.redirect("/");
+                halt();
+            }
+
             if (req.attribute("username") == null) {
                 setFlashMessage(req, "Whoops, please sign in first!");
                 res.redirect("/");
@@ -147,9 +161,9 @@ public class Main {
             String title = rq.queryParams("title");
             String text = rq.queryParams("text");
             String tags = rq.queryParams("tags");
-            entry.setTitle(title);
-            entry.setText(text);
-            entry.setTags(tags);
+            if (title!=null && !title.equals("")) entry.setTitle(title);
+            if (text!=null && !text.equals("")) entry.setText(text);
+            if (tags!=null && !tags.equals("")) entry.setTags(tags);
             rs.redirect("/entries");
             return null;
         });

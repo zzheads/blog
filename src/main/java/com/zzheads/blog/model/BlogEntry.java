@@ -61,7 +61,7 @@ public class BlogEntry {
     }
 
     public void setText(String text) {
-        mText = text;
+        if (text!=null) mText = text;
     }
 
     public ArrayList<Comment> getComments() {
@@ -69,7 +69,7 @@ public class BlogEntry {
     }
 
     public void setComments(ArrayList<Comment> comments) {
-        mComments = comments;
+        if (comments!=null) mComments = comments;
     }
 
     public String getTitle() {
@@ -77,7 +77,7 @@ public class BlogEntry {
     }
 
     public void setTitle(String title) {
-        mTitle = title;
+        if (title!=null) mTitle = title;
     }
 
     public String getSlug() {
@@ -89,11 +89,17 @@ public class BlogEntry {
     }
 
     public void setTags(String tags) {
-        mTagsString = tags;
-        mTags = getTagsSplit(tags);
+        if (tags != null) {
+            mTagsString = tags;
+            mTags = getTagsSplit(tags);
+        }
     }
 
     public static ArrayList<String> getTagsSplit (String string) {
+        if (string == null) {
+            throw new NotFoundException();
+        }
+
         ArrayList<String> result = new ArrayList<>();
         Pattern regexp = Pattern.compile("#(\\w+)"); // Regular expression to get HashTags from string (\s|\A)#(\w+)
         Matcher mat = regexp.matcher(string);
