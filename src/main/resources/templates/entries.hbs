@@ -11,11 +11,25 @@
 </header>
 <section>
     <div class="container">
-        <div class="entry-list">
+        <div class="entry-list" align="center">
+            <form action="/entries" method="get" name="selectedtag" class="select">
+                <select name="selectedtag">
+                    {{#each tags}}
+                        <option name="selectedtag" value="{{.}}">{{.}}</option>
+                    {{/each}}
+                </select>
+                <input type="submit" value="Select Entries by TAG" class="button">
+                <h2 class="centertext">{{titleText}}</h2>
+            </form>
+            <br>
+            <br>
                 {{#each blogEntry}}
                 <article>
                     <h2><a href="entry/{{slug}}">{{title}}</a></h2>
-                    <time datetime="20-01-16 14:55">{{dateAsString}}</time>
+                    <time datetime="20-01-16 14:55" class="time">{{dateAsString}}</time>
+                    <div class="tags">
+                        <p>TAGs: {{#each tags}}{{.}} {{/each}}</p>
+                    </div>
                 </article>
                 {{/each}}
         </div>

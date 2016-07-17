@@ -16,6 +16,9 @@
                 <article>
                     <h1>{{entry.title}}</h1>
                     <time datetime="16-01-16 01:00">{{entry.dateAsString}}</time>
+                    <div class="tags">
+                        <p>TAGs: {{#each tags}} {{.}}, {{/each}}</p>
+                    </div>
                     <div class="entry">
                         <p>{{entry.text}}</p>
                         <p></p>

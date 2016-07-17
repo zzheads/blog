@@ -1,12 +1,13 @@
 package com.zzheads.blog.model;
 
 import com.github.slugify.Slugify;
-import spark.Spark;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BlogEntry {
     private Date mDate;
@@ -14,14 +15,18 @@ public class BlogEntry {
     private String mText;
     private String mSlug;
     private ArrayList<Comment> mComments;
+    private String mTagsString;
+    private ArrayList<String> mTags;
 
-    public BlogEntry(Date date, String title, String text) {
+    public BlogEntry(Date date, String title, String text, String tags) {
         mDate = date;
         mTitle = title;
         mText = text;
         mComments = new ArrayList<>();
+        mTagsString = tags;
+        mTags = getTagsSplit(tags);
 
-        Slugify slg = null;
+        Slugify slg;
         try {
             slg = new Slugify();
             mSlug = slg.slugify(title);
@@ -79,7 +84,28 @@ public class BlogEntry {
         return mSlug;
     }
 
-    public String getSlugify (String string) {
+    public ArrayList<String> getTags () {
+        return mTags;
+    }
+
+    public void setTags(String tags) {
+        mTagsString = tags;
+        mTags = getTagsSplit(tags);
+    }
+
+    public static ArrayList<String> getTagsSplit (String string) {
+        ArrayList<String> result = new ArrayList<>();
+        Pattern regexp = Pattern.compile("#(\\w+)"); // Regular expression to get HashTags from string (\s|\A)#(\w+)
+        Matcher mat = regexp.matcher(string);
+        while (mat.find()) {
+            result.add(mat.group(0));
+        }
+
+        return result;
+    }
+
+    // Just in case we'll need get slug from string
+    public static String getSlugify (String string) {
         String result="";
         try {
             Slugify slugify = new Slugify();
