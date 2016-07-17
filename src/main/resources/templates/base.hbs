@@ -13,7 +13,9 @@
     <body>
         <div class="page">
             {{#if flashMessage}}
-                <p id="flash-message">{{flashMessage}}</p>
+                <div class="message">
+                    <h2 id="flash-message" align="center">{{flashMessage}}</h2>
+                </div>
             {{/if}}
 {{/block}}
 

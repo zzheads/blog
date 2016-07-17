@@ -3,7 +3,9 @@ package com.zzheads.blog;
 import com.zzheads.blog.model.Blog;
 import com.zzheads.blog.model.BlogEntry;
 import com.zzheads.blog.model.Comment;
+import com.zzheads.blog.model.NotFoundException;
 import spark.ModelAndView;
+import spark.Request;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -11,13 +13,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
+import static spark.Spark.before;
+import static spark.Spark.halt;
 
 /**
  * Created by zzheads on 15.07.2016.
  */
 public class Main {
+
+    private static final java.lang.String FLASH_MESSAGE_KEY = "flash_message";
+
 
     public static void main(String[] args) {
         Blog blog = new Blog();
@@ -44,6 +50,57 @@ public class Main {
         blog.addEntry(blogEntry5);
 
         Spark.staticFileLocation("/public");
+
+
+
+        before((req, res) -> {
+            String username = req.cookie("username");
+            String password = req.cookie("password");
+            if (username != null) {
+                if (username.equals("admin")) {
+                    req.attribute("username", username);
+                }
+            }
+        });
+
+        before("/entries", (req, res) -> {
+            if (req.attribute("username") == null) {
+                setFlashMessage(req, "Whoops, please sign in first!");
+                res.redirect("/");
+                halt();
+            }
+        });
+
+        before("/new", (req, res) -> {
+            if (req.attribute("username") == null) {
+                setFlashMessage(req, "Whoops, please sign in first!");
+                res.redirect("/");
+                halt();
+            }
+        });
+
+        before("/edit", (req, res) -> {
+            if (req.attribute("username") == null) {
+                setFlashMessage(req, "Whoops, please sign in first!");
+                res.redirect("/");
+                halt();
+            }
+        });
+
+        get("/", (req, res) -> {
+            Map<String, String> model = new HashMap<>();
+            model.put("username", req.attribute("username"));
+            model.put("flashMessage", captureFlashMessage(req));
+            return new ModelAndView(model, "index.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/sign-in", (req, res) -> {
+            String username = req.queryParams("username");
+            res.cookie("username", username);
+            res.redirect("/");
+            return null;
+        });
+
 
         get("/entries", (rq, rs) -> {
             Map<String, Object> model = new HashMap<>();
@@ -80,6 +137,13 @@ public class Main {
             return null;
         });
 
+        get("/delete/:slug", (rq, rs) -> {
+            BlogEntry entry = blog.findEntryBySlug(rq.params("slug"));
+            blog.deleteEntry(entry);
+            rs.redirect("/entries");
+            return null;
+        });
+
         post("/entry/:slug/comment", (rq, rs) -> {
             BlogEntry entry = blog.findEntryBySlug(rq.params("slug"));
             String author = rq.queryParams("author");
@@ -106,6 +170,34 @@ public class Main {
             return new ModelAndView(model, "entry.hbs");
         }, new HandlebarsTemplateEngine());
 
-
+        exception(NotFoundException.class, (exc, req, res) -> {
+            res.status(404);
+            HandlebarsTemplateEngine engine = new HandlebarsTemplateEngine();
+            String html = engine.render(new ModelAndView(null, "not-found.hbs"));
+            res.body(html);
+        });
     }
+
+    private static void setFlashMessage(Request req, String message) {
+        req.session().attribute(FLASH_MESSAGE_KEY, message);
+    }
+
+    private static String getFlashMessage (Request req) {
+        if (req.session(false) == null) {
+            return null;
+        }
+        if (!req.session().attributes().contains(FLASH_MESSAGE_KEY)) {
+            return null;
+        }
+        return (String) req.session().attribute(FLASH_MESSAGE_KEY);
+    }
+
+    private static String captureFlashMessage (Request req) {
+        String message = getFlashMessage(req);
+        if (message != null) {
+            req.session().removeAttribute(FLASH_MESSAGE_KEY);
+        }
+        return message;
+    }
+
 }

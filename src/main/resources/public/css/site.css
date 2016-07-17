@@ -15,6 +15,13 @@ body {
 	padding: 0 25px;
 	background: #FFF;
 }
+.message {
+	color: #FFFFFF;
+	font-family: 'Noto Serif', Georgia, serif;
+	background: #444;
+	margin: 30px;
+	padding: 0 25px;
+}
 header .site-header {
 	border-bottom: 1px solid #d1d1d1;
 	margin: 0 auto;
@@ -126,6 +133,12 @@ a.link {
 /* ==========================================================================
    Page Styles
    ========================================================================== */
+
+.centertext
+{
+	align-content: center;
+	margin: 30px;
+}
 
 .entry-list,
 .edit-entry,

@@ -17,8 +17,16 @@ public class Blog implements BlogDao {
 
     @Override
     public boolean addEntry(BlogEntry blogEntry) {
-        mBlogEntries.add(blogEntry);
-        return true;
+        if (blogEntry != null) {
+            mBlogEntries.add(blogEntry);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteEntry(BlogEntry blogEntry) {
+        return mBlogEntries.remove(blogEntry);
     }
 
     @Override

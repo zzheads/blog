@@ -1,14 +1,40 @@
 {{#partial "content"}}
-    {{#if username}}
-        <h1> Welcome {{username}}!</h1>
-        <p>View <a href="/ideas">all course ideas</a>.</p>
-    {{else}}
-        <h1>Welcome Students!</h1>
-        <form action="/sign-in" method="post">
-            <input type="text" placeholder="What's your user name?" name="username">
-            <button>Sign in</button>
-        </form>
-    {{/if}}
+    <body>
+    <header>
+        <div class="container">
+            <div class="site-header">
+                <a class="logo" href="/entries">SparkBlog</a>
+                <a class="new-entry button button-round" href="/new"><i class="material-icons">create</i></a>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="container">
+            {{#if username}}
+                <h2 align="center" class="new-entry">Welcome {{username}}!</h2>
+                <h2 align="center" class="new-entry">View <a href="/entries">all blog entries</a></h2>
+            {{else}}
+                <h2 align="center" class="new-entry">Welcome to SparkBLOG!</h2>
+
+                <div class="new-entry">
+                    <form action="/sign-in" method="post">
+                        <label for="username">Username:</label>
+                        <input type="text" name="username">
+                        <label for="password">Password</label>
+                        <input type="password" name="password">
+                        <button class="button">Sign in</button>
+                    </form>
+                </div>
+            {{/if}}
+        </div>
+    </section>
+    <footer>
+        <div>
+            <a href="#">Contact Us</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+            <a href="#">Terms</a>
+        </div>
+    </footer>
+    </body>
 {{/partial}}
 
 {{>base.hbs}}
