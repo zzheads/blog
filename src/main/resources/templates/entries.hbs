@@ -13,9 +13,9 @@
     <div class="container">
         <div class="entry-list" align="center">
             <form action="/entries" method="get" name="selectedtag" class="select">
-                <select name="selectedtag">
+                <select name="selectedtag" class="select">
                     {{#each tags}}
-                        <option name="selectedtag" value="{{.}}">{{.}}</option>
+                        <option class="select" name="selectedtag" value="{{.}}">{{.}}</option>
                     {{/each}}
                 </select>
                 <input type="submit" value="Select Entries by TAG" class="button">

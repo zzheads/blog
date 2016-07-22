@@ -76,13 +76,6 @@ public class Main {
         });
 
         before("/new", (req, res) -> {
-            String password = req.cookie("password");
-            if (password != PASSWORD_ADMIN) {
-                setFlashMessage(req, "Whoops, you cant post new entries since you are not admin");
-                res.redirect("/");
-                halt();
-            }
-
             if (req.attribute("username") == null) {
                 setFlashMessage(req, "Whoops, please sign in first!");
                 res.redirect("/");
@@ -91,13 +84,6 @@ public class Main {
         });
 
         before("/edit", (req, res) -> {
-            String password = req.cookie("password");
-            if (password != PASSWORD_ADMIN) {
-                setFlashMessage(req, "Whoops, you cant edit entries since you are not admin");
-                res.redirect("/");
-                halt();
-            }
-
             if (req.attribute("username") == null) {
                 setFlashMessage(req, "Whoops, please sign in first!");
                 res.redirect("/");
